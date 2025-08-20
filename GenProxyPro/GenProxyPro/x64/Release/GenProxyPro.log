@@ -1,0 +1,7 @@
+﻿  GenProxyPro.cpp
+  Generating code
+  246 of 1075 functions (22.9%) were compiled, the rest were copied from previous compilation.
+    60 functions were new in current compilation
+    80 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  GenProxyPro.vcxproj -> C:\Users\VS\source\repos\GenProxyPro\x64\Release\GenProxyPro.exe
