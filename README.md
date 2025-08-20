@@ -4,9 +4,7 @@ GenProxyPro is a C++ tool that automatically generates a Proxy DLL project to fo
 
 # How It Works
 
-You run GenProxyPro, passing the original DLL as argument.
-
-It parses the exports from that DLL.
+You run GenProxyPro, passing the original DLL as argument. It parses the exports from that DLL.
 
 It generates a new dllmain.cpp that loads the real DLL (renamed with a custom suffix, default _orig) and forwards exports.
 
@@ -14,7 +12,8 @@ Optionally, it can emit reports or extra helper files.
 
 # Usage
 Basic
-GenProxyPro.exe <path_to_original_dll>
+
+GenProxyPro.exe <path_to_original_dll> <dllproxy_name>
 
 Example:
 
