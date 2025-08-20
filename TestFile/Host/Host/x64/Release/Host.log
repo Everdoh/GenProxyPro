@@ -1,0 +1,14 @@
+﻿  Host.cpp
+C:\Users\VS\source\repos\Host\Host\Host.cpp(3,9): warning C4005: 'UNICODE': macro redefinition
+      C:\Users\VS\source\repos\Host\Host\Host.cpp(3,9):
+      'UNICODE' previously declared on the command line
+  
+C:\Users\VS\source\repos\Host\Host\Host.cpp(4,9): warning C4005: '_UNICODE': macro redefinition
+      C:\Users\VS\source\repos\Host\Host\Host.cpp(4,9):
+      '_UNICODE' previously declared on the command line
+  
+  Generating code
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 4 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Host.vcxproj -> C:\Users\VS\source\repos\Host\x64\Release\Host.exe
