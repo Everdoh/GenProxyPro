@@ -1,16 +1,16 @@
-// GenProxyPro.cpp — Proxy DLL generator (safe, no runcommand, no shellcode)
+// GenProxyPro.cpp â€” Proxy DLL generator
 // Build (Developer Command Prompt):
 //   cl /EHsc /O2 GenProxyPro.cpp /Fe:GenProxyPro.exe
 //
 // Uso (duas formas):
-//   GenProxyPro.exe "C:\pasta" Foo.dll [opções]
-//   GenProxyPro.exe "C:\pasta\Foo.dll"  [opções]    // 2º arg ignorado se 1º já for caminho .dll
+//   GenProxyPro.exe "C:\pasta" Foo.dll [opÃ§Ãµes]
+//   GenProxyPro.exe "C:\pasta\Foo.dll"  [opÃ§Ãµes]    // 2Âº arg ignorado se 1Âº jÃ¡ for caminho .dll
 //
-// Opções:
-//   --out <dir>                     : diretório de saída (default: <dir/da DLL>)
+// OpÃ§Ãµes:
+//   --out <dir>                     : diretÃ³rio de saÃ­da (default: <dir/da DLL>)
 //   --orig-suffix <suf>             : sufixo para renomear a DLL real (default: _orig)
-//   --emit-def                      : gerar arquivo .def (além dos pragmas no dllmain.cpp)
-//   --emit-json-report              : gerar exports_<base>.json com relatório
+//   --emit-def                      : gerar arquivo .def (alÃ©m dos pragmas no dllmain.cpp)
+//   --emit-json-report              : gerar exports_<base>.json com relatÃ³rio
 //   --emit-host                     : gerar Host_<base>.cpp (loader de teste)
 //   --include <regex>               : incluir apenas exports que casem com regex (nome)
 //   --exclude <regex>               : excluir exports que casem com regex (nome)
@@ -32,7 +32,7 @@
 #include <fstream>
 #include <iostream>
 
-// -------------------- Utilidades básicas --------------------
+// -------------------- Utilidades bÃ¡sicas --------------------
 
 struct PEView {
     BYTE* base{}; size_t size{};
@@ -110,7 +110,7 @@ static std::wstring Utf8ToWide(const std::string& s) {
     int n = MultiByteToWideChar(CP_UTF8, 0, s.data(), (int)s.size(), nullptr, 0);
     if (n <= 0) return L"";
     std::wstring w(n, L'\0');
-    MultiByteToWideChar(CP_UTF8, 0, s.data(), (int)s.size(), &w[0], n); // &w[0] = buffer MUTÁVEL (ok em C++11+)
+    MultiByteToWideChar(CP_UTF8, 0, s.data(), (int)s.size(), &w[0], n); // &w[0] = buffer MUTÃVEL (ok em C++11+)
     return w;
 }
 static std::string WideToUtf8(const std::wstring& w) {
@@ -122,7 +122,7 @@ static std::string WideToUtf8(const std::wstring& w) {
     return s;
 }
 
-// -------------------- Extração de Exports --------------------
+// -------------------- ExtraÃ§Ã£o de Exports --------------------
 
 struct ExportItem {
     std::string name;      // vazio => ordinal-only
@@ -167,7 +167,7 @@ static bool ExtractExports(PEView& pe, std::vector<ExportItem>& out, DWORD& ordi
             if (fs) e.forwardTarget = fs; // "DLL.Func"
         }
 
-        // heurística de export de dados (seção não-executável)
+        // heurÃ­stica de export de dados (seÃ§Ã£o nÃ£o-executÃ¡vel)
         if (e.rva && !e.isForwardString) {
             auto sec = FindSectionForRva(pe, e.rva);
             if (sec && !(sec->Characteristics & IMAGE_SCN_MEM_EXECUTE)) e.probableData = true;
@@ -177,7 +177,7 @@ static bool ExtractExports(PEView& pe, std::vector<ExportItem>& out, DWORD& ordi
     return true;
 }
 
-// -------------------- Opções de CLI --------------------
+// -------------------- OpÃ§Ãµes de CLI --------------------
 
 struct Options {
     std::wstring inDir, inDllName, inFullPath; bool useFullPath{};
@@ -189,7 +189,7 @@ struct Options {
 
 static void ParseArgs(int argc, wchar_t** argv, Options& o) {
     if (argc < 2) {
-        fwprintf(stderr, L"Uso:\n  %ls <dir> <dll> [opções]\n  %ls <caminho\\para\\dll.dll> [opções]\n", argv[0], argv[0]);
+        fwprintf(stderr, L"Uso:\n  %ls <dir> <dll> [opÃ§Ãµes]\n  %ls <caminho\\para\\dll.dll> [opÃ§Ãµes]\n", argv[0], argv[0]);
         ExitProcess(1);
     }
     if (argc >= 3 && IsDllPath(argv[1])) {
@@ -205,7 +205,7 @@ static void ParseArgs(int argc, wchar_t** argv, Options& o) {
         o.inDllName = argv[2];
     }
     else {
-        fwprintf(stderr, L"[!] Parâmetros insuficientes.\n"); ExitProcess(1);
+        fwprintf(stderr, L"[!] ParÃ¢metros insuficientes.\n"); ExitProcess(1);
     }
 
     o.outDir = o.inDir;
@@ -222,7 +222,7 @@ static void ParseArgs(int argc, wchar_t** argv, Options& o) {
         else if (k == L"--include" && i + 1 < argc) { o.hasInclude = true; o.reInclude = std::wregex(argv[++i], std::regex::icase); }
         else if (k == L"--exclude" && i + 1 < argc) { o.hasExclude = true; o.reExclude = std::wregex(argv[++i], std::regex::icase); }
         else if (k == L"--verbose") o.verbose = true;
-        else { fwprintf(stderr, L"[!] Opção desconhecida: %ls\n", k.c_str()); ExitProcess(1); }
+        else { fwprintf(stderr, L"[!] OpÃ§Ã£o desconhecida: %ls\n", k.c_str()); ExitProcess(1); }
     }
 }
 
@@ -234,7 +234,7 @@ static bool NamePassesFilters(const Options& o, const std::string& name) {
     return true;
 }
 
-// -------------------- Emissão de artefatos --------------------
+// -------------------- EmissÃ£o de artefatos --------------------
 
 static void WriteJsonReport(const std::wstring& path, const std::vector<ExportItem>& exps) {
     std::ofstream js(WideToUtf8(path), std::ios::binary);
@@ -284,7 +284,7 @@ static void EmitDef(const std::wstring& pathDef,
     bool keepOrdinals)
 {
     std::ofstream d(WideToUtf8(pathDef), std::ios::binary);
-    if (!d) { fwprintf(stderr, L"[!] Não foi possível criar: %ls\n", pathDef.c_str()); return; }
+    if (!d) { fwprintf(stderr, L"[!] NÃ£o foi possÃ­vel criar: %ls\n", pathDef.c_str()); return; }
     auto base = BasenameNoExt(inDllName);
     auto renamed = base + origSuffix;
 
@@ -312,12 +312,12 @@ static void EmitDllMainCpp(const std::wstring& outPath,
     const std::vector<ExportItem>& exps)
 {
     std::ofstream f(WideToUtf8(outPath), std::ios::binary);
-    if (!f) { fwprintf(stderr, L"[!] Não foi possível criar: %ls\n", outPath.c_str()); ExitProcess(5); }
+    if (!f) { fwprintf(stderr, L"[!] NÃ£o foi possÃ­vel criar: %ls\n", outPath.c_str()); ExitProcess(5); }
 
     auto base = BasenameNoExt(inDllName);
     auto renamed = base + origSuffix;
 
-    // Cabeçalho + includes (PCH primeiro!)
+    // CabeÃ§alho + includes (PCH primeiro!)
     f <<
         R"(#include "pch.h"
 #ifndef UNICODE
@@ -335,7 +335,7 @@ static INIT_ONCE gOnce = INIT_ONCE_STATIC_INIT;
 static HMODULE gReal = nullptr;
 static const wchar_t* kRealBase = L")" << WideToUtf8(renamed) << R"(.dll";
 
-// Alguns Windows antigos podem não ter SetDefaultDllDirectories
+// Alguns Windows antigos podem nÃ£o ter SetDefaultDllDirectories
 static void SafeSetDefaultDllDirectories() {
     HMODULE k32 = GetModuleHandleW(L"kernel32.dll");
     if (!k32) return;
@@ -345,7 +345,7 @@ static void SafeSetDefaultDllDirectories() {
 }
 
 static BOOL CALLBACK InitReal(PINIT_ONCE, PVOID, PVOID*) {
-    // Pega o diretório da proxy usando __ImageBase
+    // Pega o diretÃ³rio da proxy usando __ImageBase
     wchar_t modPath[MAX_PATH];
     DWORD n = GetModuleFileNameW((HMODULE)&__ImageBase, modPath, MAX_PATH);
     if (!n) return TRUE;
@@ -395,7 +395,7 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD reason, LPVOID) {
 
         if (!e.name.empty()) {
             if (opt.respectFwd && e.isForwardString && !e.forwardTarget.empty()) {
-                // mantém forwarder nativo exatamente como está
+                // mantÃ©m forwarder nativo exatamente como estÃ¡
                 f << "#pragma comment(linker, \"/export:" << e.name << "=" << e.forwardTarget << "\")\n";
                 keptCnt++;
             }
@@ -428,7 +428,7 @@ int wmain(int argc, wchar_t** argv) {
     std::wstring inPath = opt.useFullPath ? opt.inFullPath : JoinPath(opt.inDir, opt.inDllName);
     DWORD attrs = GetFileAttributesW(inPath.c_str());
     if (attrs == INVALID_FILE_ATTRIBUTES) {
-        fwprintf(stderr, L"[!] Arquivo não encontrado: %ls (err=%lu)\n", inPath.c_str(), GetLastError());
+        fwprintf(stderr, L"[!] Arquivo nÃ£o encontrado: %ls (err=%lu)\n", inPath.c_str(), GetLastError());
         return 2;
     }
 
@@ -440,11 +440,11 @@ int wmain(int argc, wchar_t** argv) {
 
     std::vector<ExportItem> exps; DWORD base = 0;
     if (!ExtractExports(pe, exps, base)) {
-        fwprintf(stderr, L"[!] DLL sem export table válida: %ls\n", inPath.c_str());
+        fwprintf(stderr, L"[!] DLL sem export table vÃ¡lida: %ls\n", inPath.c_str());
         return 4;
     }
 
-    // Saídas
+    // SaÃ­das
     CreateDirectoryW(opt.outDir.c_str(), nullptr);
     std::wstring baseNoExt = BasenameNoExt(opt.inDllName);
 
@@ -476,3 +476,4 @@ int wmain(int argc, wchar_t** argv) {
 
     return 0;
 }
+
