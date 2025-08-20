@@ -20,7 +20,7 @@ and the host program will load your proxy while real calls are forwarded.
 
 # Options
 
---out output directory (default: <same dir as DLL>)
+--out output directory (default: same dir as DLL)
 --orig-suffix <suf> suffix to rename the real DLL (default: _orig)
 
   --emit-def                      : generate .def file (in addition to pragmas in dllmain.cpp)
