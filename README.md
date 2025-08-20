@@ -17,3 +17,8 @@
 ### Basic
 ```bash
 GenProxyPro.exe <path_to_original_dll> <dllproxy_name>
+
+GenProxyPro.exe C:\Windows\System32\version.dll
+
+This generates a dllmain.cpp proxy file.
+Rename the original version.dll to version_orig.dll, place your proxy DLL with the original name (version.dll) in the same directory, and the host program will load your proxy while real calls are forwarded.
