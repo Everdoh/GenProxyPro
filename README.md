@@ -19,7 +19,7 @@ This generates a dllmain.cpp proxy file. Rename the original version.dll to vers
 and the host program will load your proxy while real calls are forwarded.
 
 # Options
-  --out <dir>                     : output directory (default: <same dir as DLL>)
+  --out <dir>                      output directory (default: <same dir as DLL>)
   --orig-suffix <suf>             : suffix to rename the real DLL (default: _orig)
   --emit-def                      : generate .def file (in addition to pragmas in dllmain.cpp)
   --emit-json-report              : generate exports_<base>.json with export metadata
