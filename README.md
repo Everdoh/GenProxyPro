@@ -20,9 +20,9 @@ and the host program will load your proxy while real calls are forwarded.
 
 # Options
 
+--out <dir>  output directory (default: <same dir as DLL>)
+--orig-suffix <suf> suffix to rename the real DLL (default: _orig)
 
-  --out <dir>                      output directory (default: <same dir as DLL>)
-  --orig-suffix <suf>             : suffix to rename the real DLL (default: _orig)
   --emit-def                      : generate .def file (in addition to pragmas in dllmain.cpp)
   --emit-json-report              : generate exports_<base>.json with export metadata
   --emit-host                     : generate Host_<base>.cpp (test loader program)
