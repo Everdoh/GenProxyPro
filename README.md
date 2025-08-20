@@ -11,16 +11,12 @@ It generates a new dllmain.cpp that loads the real DLL (renamed with a custom su
 Optionally, it can emit reports or extra helper files.
 
 # Usage
-Basic
+Basic:
 
 GenProxyPro.exe <path_to_original_dll> <dllproxy_name>
 
-Example:
-
-GenProxyPro.exe C:\Windows\System32\version.dll
-
-
-This generates a dllmain.cpp proxy file. Rename the original version.dll to version_orig.dll, place your proxy DLL with the original name (version.dll) in the same directory, and the host program will load your proxy while real calls are forwarded.
+This generates a dllmain.cpp proxy file. Rename the original version.dll to version_orig.dll, place your proxy DLL with the original name (version.dll) in the same directory,
+and the host program will load your proxy while real calls are forwarded.
 
 # Options
   --out <dir>                     : output directory (default: <same dir as DLL>)
