@@ -35,3 +35,27 @@ Rename the original version.dll to version_orig.dll, place your proxy DLL with t
 --keep-ordinals                 : preserve ordinal layout; reports gaps (RVA=0)
 --respect-existing-forwarders   : keep native forwarders (DLL.Func) instead of redirecting to *_orig
 --verbose                       : verbose logging
+
+📊 Usage Examples
+
+| Command                                                     | Description                                                          |
+| ----------------------------------------------------------- | -------------------------------------------------------------------- |
+| `GenProxyPro.exe C:\Sys\foo.dll`                            | Generates a proxy for `foo.dll`, real DLL is renamed `foo_orig.dll`. |
+| `GenProxyPro.exe C:\Sys\bar.dll --out C:\Projects\ProxyBar` | Saves generated files to `C:\Projects\ProxyBar`.                     |
+| `GenProxyPro.exe test.dll --orig-suffix .real`              | Uses `.real` suffix → real file is `test.dll.real`.                  |
+| `GenProxyPro.exe my.dll --emit-def`                         | Generates `my.def` file along with `dllmain.cpp`.                    |
+| `GenProxyPro.exe api.dll --emit-json-report`                | Outputs `exports_api.json` with full export metadata.                |
+| `GenProxyPro.exe net.dll --emit-host`                       | Creates `Host_net.cpp` for testing proxy loading.                    |
+| `GenProxyPro.exe gui.dll --include Init.*`                  | Forwards only functions matching `Init.*`.                           |
+| `GenProxyPro.exe gui.dll --exclude Debug.*`                 | Excludes exports matching `Debug.*`.                                 |
+| `GenProxyPro.exe core.dll --keep-ordinals`                  | Preserves ordinal positions exactly as in original DLL.              |
+| `GenProxyPro.exe engine.dll --verbose`                      | Runs with verbose logs for debugging.                                |
+
+
+🔮 Future Ideas
+
+Automatic detection and handling of complex forwarders
+
+Better template customization (hooks, inline stubs)
+
+Integration with shellcode embedding as an optional advanced flag
